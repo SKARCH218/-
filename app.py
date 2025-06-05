@@ -88,33 +88,6 @@ def toggle_date_inputs():
     month_entry.config(state=state)
     day_entry.config(state=state)
 
-def toggle_name_selection():
-    if use_list_var.get():
-        name_entry.config(state="readonly")
-        name_combo.config(state="readonly")
-        name_entry.delete(0, tk.END)
-        name_entry.insert(0, name_combo.get())
-    else:
-        name_entry.config(state="normal")
-        name_combo.config(state="disabled")
-
-def update_name_entry(event):
-    if use_list_var.get():
-        name_entry.config(state="normal")
-        name_entry.delete(0, tk.END)
-        name_entry.insert(0, name_combo.get())
-        name_entry.config(state="readonly")
-
-def load_names_from_csv(path):
-    names = []
-    with open(path, encoding="utf-8-sig") as f:
-        reader = csv.reader(f)
-        next(reader)  # 헤더 스킵
-        for row in reader:
-            if len(row) >= 3:
-                names.append(row[2].strip())
-    return names
-
 # ---------------- GUI 구성 -------------------
 
 root = tk.Tk()
@@ -122,17 +95,9 @@ root.title("하꼬의숲 프리패스권 이미지 생성기")
 root.geometry("450x500")
 root.resizable(False, False)
 
-# 이름 선택
+# 이름 입력
 tk.Label(root, text="이름").pack(pady=(10, 0))
-use_list_var = tk.BooleanVar(value=True)
-tk.Checkbutton(root, text="CSV 목록에서 선택", variable=use_list_var, command=toggle_name_selection).pack()
-
-name_combo = ttk.Combobox(root, state="readonly", width=30)
-name_combo['values'] = load_names_from_csv("data/data.csv")
-name_combo.bind("<<ComboboxSelected>>", update_name_entry)
-name_combo.pack()
-
-name_entry = tk.Entry(root, width=30, state="readonly")
+name_entry = tk.Entry(root, width=30)
 name_entry.pack()
 
 # 발행인
